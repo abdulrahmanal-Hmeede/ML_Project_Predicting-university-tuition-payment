@@ -1,0 +1,42 @@
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Environment variables and local secrets
+.env
+.env.*
+!.env.example
+
+# Logs and local runtime files
+*.log
+*.tmp
+*.swp
+
+# IDE and OS files
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Local model and data experiments
+models/*.joblib
+models/*.pkl.tmp
+data/*.tmp

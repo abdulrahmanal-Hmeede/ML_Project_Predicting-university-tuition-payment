@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التنبؤ بسداد القسط الجامعي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1e3a5f;
+            --navy-dark: #16304f;
+            --blue: #2563a6;
+            --teal: #2a9d8f;
+            --canvas: #f5f7fa;
+            --surface: #ffffff;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --success: #2e7d5b;
+            --success-bg: #eff9f3;
+            --warning: #a56d13;
+            --warning-bg: #fff8e8;
+            --radius: 14px;
+            --shadow: 0 12px 30px rgba(30, 58, 95, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            min-width: 320px;
+            margin: 0;
+            background: var(--canvas);
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+        }
+        button, input, select { font: inherit; }
+        button, select { cursor: pointer; }
+        .app { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--navy);
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 800;
+            box-shadow: 0 6px 14px rgba(30, 58, 95, 0.18);
+        }
+        .brand strong { display: block; color: var(--navy); font-size: 1rem; }
+        .brand span { display: block; color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr);
+            gap: 32px;
+            align-items: end;
+            min-height: 220px;
+            padding: 34px 38px;
+            border-radius: var(--radius);
+            background: var(--navy);
+            color: #fff;
+            box-shadow: var(--shadow);
+        }
+        .hero::before, .hero::after {
+            position: absolute;
+            content: '';
+            border: 1px solid rgba(158, 216, 208, 0.24);
+            border-radius: 50%;
+        }
+        .hero::before { width: 360px; height: 360px; left: -180px; top: -230px; }
+        .hero::after { width: 230px; height: 230px; left: 66%; bottom: -170px; }
+        .hero-content, .hero-aside { position: relative; z-index: 1; }
+        .kicker { color: #9ed8d0; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; }
+        h1 { margin: 10px 0 12px; font-size: clamp(1.55rem, 3vw, 2.35rem); line-height: 1.35; }
+        .hero p { max-width: 660px; margin: 0; color: #d7e3f0; font-size: 0.94rem; line-height: 1.9; }
+        .hero-aside {
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .hero-aside-label { color: #b8ccdf; font-size: 0.76rem; }
+        .hero-aside-value { margin-top: 8px; color: #fff; font-size: 1.02rem; font-weight: 700; line-height: 1.7; }
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 290px;
+            gap: 24px;
+            align-items: start;
+            margin-top: 24px;
+        }
+        .panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: 0 4px 16px rgba(23, 32, 51, 0.04); }
+        .form-panel { padding: 28px; }
+        .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .panel-heading h2 { margin: 0; color: var(--navy); font-size: 1.2rem; }
+        .panel-heading p { margin: 6px 0 0; color: var(--muted); font-size: 0.83rem; line-height: 1.7; }
+        .required-note { color: var(--muted); font-size: 0.76rem; white-space: nowrap; }
+        .form-section { padding: 25px 0 3px; }
+        .form-section + .form-section { border-top: 1px solid var(--border); }
+        .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--navy); font-size: 1rem; }
+        .section-number { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #e8f3f2; color: var(--teal); font-size: 0.8rem; font-weight: 800; }
+        .field-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 16px; }
+        .field { min-width: 0; }
+        .field label { display: block; margin-bottom: 7px; color: #334155; font-size: 0.82rem; font-weight: 700; }
+        .field label span { color: var(--error, #c94c4c); }
+        .field input, .field select {
+            width: 100%;
+            min-height: 45px;
+            padding: 0 12px;
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            outline: 0;
+            background: #fbfcfe;
+            color: var(--text);
+            font-size: 0.86rem;
+            transition: 160ms ease;
+        }
+        .field input:hover, .field select:hover { border-color: #94a3b8; background: #fff; }
+        .field input:focus, .field select:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 166, 0.13); }
+        .field small { display: block; min-height: 16px; margin-top: 5px; color: var(--muted); font-size: 0.7rem; }
+        .form-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .action-note { color: var(--muted); font-size: 0.76rem; line-height: 1.6; }
+        .submit-button { min-height: 47px; padding: 0 24px; border: 0; border-radius: 8px; background: var(--navy); color: #fff; font-weight: 700; box-shadow: 0 5px 12px rgba(30, 58, 95, 0.18); transition: 160ms ease; }
+        .submit-button:hover { background: var(--navy-dark); transform: translateY(-1px); }
+        .submit-button:focus-visible { outline: 3px solid rgba(42, 157, 143, 0.35); outline-offset: 3px; }
+        .side-column { display: grid; gap: 16px; }
+        .side-card { padding: 22px; }
+        .side-card h3 { margin: 0 0 16px; color: var(--navy); font-size: 0.98rem; }
+        .steps { display: grid; gap: 15px; margin: 0; padding: 0; list-style: none; }
+        .steps li { display: grid; grid-template-columns: 27px 1fr; gap: 10px; align-items: start; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
+        .step-no { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 8px; background: #eef4fa; color: var(--blue); font-size: 0.75rem; font-weight: 800; }
+        .privacy-note { border-right: 3px solid var(--teal); background: #f1f8f7; color: #426c68; font-size: 0.78rem; line-height: 1.8; }
+        .result-card { position: relative; overflow: hidden; padding: 25px 28px; border: 1px solid; border-radius: var(--radius); }
+        .result-card::before { position: absolute; content: ''; inset: 0 auto 0 0; width: 6px; }
+        .result-card.success { border-color: #b9ddc9; background: var(--success-bg); }
+        .result-card.success::before { background: var(--success); }
+        .result-card.warning { border-color: #e4b8b4; background: #fff5f3; }
+        .result-card.warning::before { background: #c94c4c; }
+        .result-top { display: flex; align-items: flex-start; gap: 15px; }
+        .result-icon { display: grid; place-items: center; flex: 0 0 52px; width: 52px; height: 52px; border: 0; border-radius: 50%; color: #fff; font-size: 1.45rem; font-weight: 800; box-shadow: 0 5px 12px rgba(23, 32, 51, 0.14); }
+        .result-card.success .result-icon { background: var(--success); }
+        .result-card.warning .result-icon { background: #c94c4c; }
+        .result-eyebrow { margin-bottom: 5px; color: var(--muted); font-size: 0.76rem; font-weight: 700; }
+        .result-card h2 { margin: 0; color: var(--navy); font-size: 1.08rem; line-height: 1.6; }
+        .result-card p { margin: 7px 0 0; color: var(--muted); font-size: 0.85rem; }
+        .result-badge { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 5px 10px; border-radius: 999px; font-size: 0.74rem; font-weight: 800; }
+        .result-card.success .result-badge { background: #d8f0e2; color: var(--success); }
+        .result-card.warning .result-badge { background: #f8deda; color: #a53e3e; }
+        .result-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .result-metrics { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(100, 116, 139, 0.18); }
+        .metric { min-width: 160px; padding: 11px 14px; border-radius: 8px; background: rgba(255, 255, 255, 0.72); }
+        .metric-label { display: block; color: var(--muted); font-size: 0.72rem; }
+        .metric-value { display: block; margin-top: 3px; color: var(--navy); font-size: 1.2rem; font-weight: 800; }
+        .delay-metric { border-right: 4px solid #c94c4c; }
+        .delay-metric .metric-value { color: #a53e3e; font-size: 1.45rem; }
+        .stepper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 24px 0 2px; }
+        .step { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--muted); font-size: 0.75rem; }
+        .step::after { content: ''; flex: 1; height: 1px; margin-right: 4px; background: var(--border); }
+        .step:last-child::after { display: none; }
+        .step-marker { display: grid; place-items: center; flex: 0 0 27px; width: 27px; height: 27px; border: 1px solid var(--border-strong); border-radius: 50%; background: #fff; color: var(--muted); font-size: 0.72rem; font-weight: 800; }
+        .step.active { color: var(--navy); font-weight: 700; }
+        .step.active .step-marker { border-color: var(--navy); background: var(--navy); color: #fff; }
+        .step.complete .step-marker { border-color: var(--teal); background: #e8f3f2; color: var(--teal); }
+        .step-panel { display: none; }
+        .step-panel.active { display: block; animation: reveal 180ms ease-out; }
+        .review-panel { display: none; padding: 25px 0 3px; }
+        .review-panel.active { display: block; animation: reveal 180ms ease-out; }
+        .review-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; margin: 0; }
+        .review-item { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fbfcfe; font-size: 0.78rem; }
+        .review-item dt { color: var(--muted); }
+        .review-item dd { margin: 0; color: var(--navy); font-weight: 700; }
+        .back-button, .next-button { min-height: 44px; padding: 0 19px; border: 1px solid var(--border-strong); border-radius: 8px; background: #fff; color: var(--navy); font-weight: 700; transition: 160ms ease; }
+        .back-button:hover, .next-button:hover { border-color: var(--blue); background: #f6f9fc; }
+        .back-button[hidden], .next-button[hidden], .submit-button[hidden] { display: none; }
+        .action-buttons { display: flex; gap: 10px; }
+        .submit-button.is-loading { pointer-events: none; opacity: 0.76; }
+        .submit-button.is-loading::before { content: ''; display: inline-block; width: 14px; height: 14px; margin-left: 8px; border: 2px solid rgba(255,255,255,0.45); border-top-color: #fff; border-radius: 50%; vertical-align: -2px; animation: spin 700ms linear infinite; }
+        .field.invalid input, .field.invalid select { border-color: #c94c4c; box-shadow: 0 0 0 3px rgba(201, 76, 76, 0.1); }
+        .field-error { display: none; margin-top: 5px; color: #c94c4c; font-size: 0.72rem; }
+        .field.invalid .field-error { display: block; }
+        .live-error { display: none; margin-top: 16px; padding: 11px 14px; border-right: 3px solid #c94c4c; border-radius: 7px; background: #fff4f3; color: #923b3b; font-size: 0.79rem; }
+        .live-error.active { display: block; }
+        @keyframes reveal { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 680px) { .app { padding: 20px 14px 32px; } .topbar { align-items: flex-start; } .status { display: none; } .hero { grid-template-columns: 1fr; gap: 20px; padding: 26px 22px; } .hero-aside { max-width: 340px; } .form-panel { padding: 20px 16px; } .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 11px; } .panel-heading { display: block; } .required-note { display: block; margin-top: 10px; } .form-actions { align-items: stretch; flex-direction: column-reverse; } .submit-button { width: 100%; } .side-column { grid-template-columns: 1fr; } .step { font-size: 0; } .step::after { margin-right: 0; } .step-marker { font-size: 0.72rem; } .review-list { grid-template-columns: 1fr; } }
+        @media (max-width: 430px) { .field-grid { grid-template-columns: 1fr; } .result-card { padding: 20px 16px; } .result-metrics { display: grid; grid-template-columns: 1fr; } .metric { min-width: 0; } }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark">عز الدين</div>
+                <div>
+                    <strong>بوابة الفاشلبن الاكاديمية</strong>
+                    <span>وحدة التحليل والدعم المالي</span>
+                </div>
+            </div>
+            <div class="status"><span class="status-dot"></span>نظام عز الدين وتاج راسه يرحب بكم</div>
+        </header>
+
+        <section class="hero" aria-labelledby="page-title">
+            <div class="hero-content">
+                <div class="kicker">أداة اتخاذ القرار الأكاديمي</div>
+                <h1 id="page-title">التنبؤ باحتمالية سداد القسط الجامعي</h1>
+                <p>أدخل بيانات الطالب الأساسية للحصول على قراءة واضحة لاحتمالية السداد في الموعد، مع تقدير مدة التأخير عند الحاجة.</p>
+            </div>
+            <div class="hero-aside">
+                <div class="hero-aside-label">ما الذي تحتاجه؟</div>
+                <div class="hero-aside-value">بيانات أكاديمية ومالية مختصرة، ثم اضغط على زر إجراء التنبؤ.</div>
+            </div>
+        </section>
+
+        {% if result %}
+        <section class="result-card {% if result.on_time %}success{% else %}warning{% endif %}" style="margin-top: 24px;" aria-live="polite">
+            <div class="result-top">
+                <div class="result-icon" aria-hidden="true">{% if result.on_time %}✓{% else %}!{% endif %}</div>
+                <div>
+                    <div class="result-eyebrow">نتيجة التقييم التنبؤي</div>
+                    <div class="result-badge">{% if result.on_time %}نتيجة إيجابية{% else %}تحتاج إلى متابعة{% endif %}</div>
+                    <h2>{% if result.on_time %}من المرجح سداد القسط في الموعد المحدد{% else %}الطالب معرض للتأخر عن سداد القسط{% endif %}</h2>
+                    <p>{% if result.on_time %}تشير المؤشرات المدخلة إلى مستوى جيد من الالتزام المتوقع.{% else %}تحتاج الحالة إلى متابعة مبكرة ودراسة أسباب التأخر المحتملة.{% endif %}</p>
+                </div>
+            </div>
+            <div class="result-metrics">
+                <div class="metric"><span class="metric-label">احتمالية السداد في الموعد</span><span class="metric-value">{{ result.probability }}%</span></div>
+                <div class="metric {% if not result.on_time %}delay-metric{% endif %}"><span class="metric-label">عدد أيام التأخير المتوقع</span><span class="metric-value">{{ result.delay_days }} يوماً</span></div>
+            </div>
+        </section>
+        {% endif %}
+
+        <div class="workspace">
+            <form action="/predict" method="post" class="panel form-panel">
+                <div class="panel-heading">
+                    <div><h2>بيانات الطالب</h2><p>املأ الحقول التالية بالبيانات المتاحة. الحقول المطلوبة موضحة بعلامة النجمة.</p></div>
+                    <span class="required-note">* حقل مطلوب</span>
+                </div>
+                <nav class="stepper" aria-label="مراحل إدخال البيانات">
+                    <div class="step active" data-step-indicator="1"><span class="step-marker">1</span><span>الأكاديمية</span></div>
+                    <div class="step" data-step-indicator="2"><span class="step-marker">2</span><span>المالية</span></div>
+                    <div class="step" data-step-indicator="3"><span class="step-marker">3</span><span>السكن</span></div>
+                    <div class="step" data-step-indicator="4"><span class="step-marker">4</span><span>المراجعة</span></div>
+                </nav>
+                <div id="form-error" class="live-error" role="alert">يرجى مراجعة الحقول المطلوبة في هذه المرحلة.</div>
+
+                <section class="form-section step-panel active" data-step="1" aria-labelledby="academic-heading">
+                    <h3 id="academic-heading" class="section-title"><span class="section-number">01</span>المعلومات الأكاديمية</h3>
+                    <div class="field-grid">
+                        <div class="field"><label for="faculty">الفرع الأكاديمي <span>*</span></label><select id="faculty" name="faculty" required><option value="هندسة معلوماتية">هندسة معلوماتية</option><option value="هندسة مدنية">هندسة مدنية</option><option value="علوم طبية وصحية">علوم طبية وصحية</option><option value="تربية">تربية</option><option value="أخرى">أخرى</option></select><div class="field-error">هذا الحقل مطلوب.</div></div>
+                        <div class="field"><label for="academic_year">السنة الدراسية <span>*</span></label><select id="academic_year" name="academic_year" required><option value="أولى">أولى</option><option value="ثانية">ثانية</option><option value="ثالثة">ثالثة</option><option value="رابعة" selected>رابعة</option><option value="خامسة">خامسة</option></select><div class="field-error">هذا الحقل مطلوب.</div></div>
+                        <div class="field"><label for="gpa">المعدل التراكمي (من 100) <span>*</span></label><input id="gpa" type="number" step="0.5" min="35" max="100" name="gpa" value="75" required><small>النطاق المقبول: 35 إلى 100</small><div class="field-error">أدخل قيمة بين 35 و100.</div></div>
+                        <div class="field"><label for="attendance">نسبة الحضور (%) <span>*</span></label><input id="attendance" type="number" min="0" max="100" name="attendance" value="80" required><div class="field-error">أدخل قيمة بين 0 و100.</div></div>
+                        <div class="field"><label for="hours">الساعات المسجلة فصلياً <span>*</span></label><input id="hours" type="number" min="3" max="36" name="hours" value="18" required><div class="field-error">أدخل قيمة بين 3 و36.</div></div>
+                    </div>
+                </section>
+
+                <section class="form-section step-panel" data-step="2" aria-labelledby="financial-heading">
+                    <h3 id="financial-heading" class="section-title"><span class="section-number">02</span>المعلومات المالية</h3>
+                    <div class="field-grid">
+                        <div class="field"><label for="tuition">قيمة القسط التقديري ($) <span>*</span></label><input id="tuition" type="number" min="50" max="2000" name="tuition" value="200" required></div>
+                        <div class="field"><label for="monthly_income">الدخل الشهري للعائلة <span>*</span></label><select id="monthly_income" name="monthly_income" required><option value="اقل من 100">أقل من 100$</option><option value="بين 100 و 200">بين 100 و 200$</option><option value="بين 200 و 500" selected>بين 200 و 500$</option><option value="بين 500 و 1000">بين 500 و 1000$</option><option value="اكثر من 1000">أكثر من 1000$</option></select></div>
+                        <div class="field"><label for="payer">المسؤول عن الدفع <span>*</span></label><select id="payer" name="payer" required><option value="الطالب">الطالب</option><option value="الأسرة(اب-أم)">الأسرة (أب/أم)</option><option value="جهة داعمة">جهة داعمة</option><option value="منحة">منحة</option></select></div>
+                        <div class="field"><label for="workers">الأشخاص العاملون في الأسرة <span>*</span></label><input id="workers" type="number" min="1" max="10" name="workers" value="2" required></div>
+                        <div class="field"><label for="siblings">إخوة في جامعات خاصة <span>*</span></label><input id="siblings" type="number" min="0" max="10" name="siblings" value="1" required></div>
+                    </div>
+                </section>
+
+                <section class="form-section step-panel" data-step="3" aria-labelledby="housing-heading">
+                    <h3 id="housing-heading" class="section-title"><span class="section-number">03</span>السكن والتنقل</h3>
+                    <div class="field-grid">
+                        <div class="field"><label for="province">المحافظة <span>*</span></label><select id="province" name="province" required><option value="ادلب">إدلب</option><option value="حلب">حلب</option><option value="حماة">حماة</option><option value="حمص">حمص</option><option value="دمشق">دمشق</option><option value="ريف دمشق">ريف دمشق</option><option value="اللاذقية">اللاذقية</option><option value="درعا">درعا</option><option value="دير الزور">دير الزور</option></select></div>
+                        <div class="field"><label for="housing">طبيعة السكن <span>*</span></label><select id="housing" name="housing" required><option value="ايجار">إيجار</option><option value="ملك">ملك</option><option value="مخيم">مخيم</option></select></div>
+                        <div class="field"><label for="distance">بعد السكن عن الجامعة (كم) <span>*</span></label><input id="distance" type="number" min="0" max="300" name="distance" value="15" required></div>
+                    </div>
+                </section>
+
+                <section class="form-section step-panel" data-step="3" aria-labelledby="history-heading">
+                    <h3 id="history-heading" class="section-title"><span class="section-number">04</span>السلوك السابق والالتزام</h3>
+                    <div class="field-grid">
+                        <div class="field"><label for="delayed_times">مرات التأخير السابقة <span>*</span></label><input id="delayed_times" type="number" min="0" max="20" name="delayed_times" value="0" required></div>
+                        <div class="field"><label for="not_delayed_times">مرات الالتزام السابقة <span>*</span></label><input id="not_delayed_times" type="number" min="0" max="20" name="not_delayed_times" value="6" required></div>
+                        <div class="field"><label for="is_working">هل يعمل بجانب الدراسة؟ <span>*</span></label><select id="is_working" name="is_working" required><option value="لا">لا</option><option value="نعم">نعم</option></select></div>
+                        <div class="field"><label for="past_delay">هل سبق وتأخر سابقاً؟ <span>*</span></label><select id="past_delay" name="past_delay" required><option value="لا">لا</option><option value="نعم">نعم</option></select></div>
+                        <div class="field"><label for="unpaid_installments">أقساط سابقة غير مسددة؟ <span>*</span></label><select id="unpaid_installments" name="unpaid_installments" required><option value="لا">لا</option><option value="نعم">نعم</option></select></div>
+                    </div>
+                </section>
+
+                <section class="review-panel" data-step="4" aria-labelledby="review-heading">
+                    <h3 id="review-heading" class="section-title"><span class="section-number">04</span>مراجعة البيانات قبل التنبؤ</h3>
+                    <p class="action-note" style="margin: 0 0 16px;">تحقق من القيم التالية، ويمكنك الرجوع لتعديل أي قسم قبل إرسال الطلب.</p>
+                    <dl id="review-list" class="review-list"></dl>
+                </section>
+
+                <div class="form-actions">
+                    <div class="action-note">ستظهر النتيجة في أعلى الصفحة بعد إرسال البيانات.</div>
+                    <div class="action-buttons">
+                        <button type="button" class="back-button" id="back-button" hidden>رجوع</button>
+                        <button type="button" class="next-button" id="next-button">متابعة</button>
+                        <button type="submit" class="submit-button" id="submit-button" hidden>إجراء التنبؤ <span aria-hidden="true">←</span></button>
+                    </div>
+                </div>
+            </form>
+
+            <aside class="side-column" aria-label="معلومات مساعدة">
+                <section class="panel side-card">
+                    <h3>طريقة الاستخدام</h3>
+                    <ol class="steps">
+                        <li><span class="step-no">1</span><span>أدخل البيانات الأكاديمية الأساسية للطالب.</span></li>
+                        <li><span class="step-no">2</span><span>أكمل البيانات المالية والسكنية المتاحة.</span></li>
+                        <li><span class="step-no">3</span><span>راجع سجل الالتزام ثم اضغط إجراء التنبؤ.</span></li>
+                    </ol>
+                </section>
+                <section class="panel side-card privacy-note">
+                    <h3>ملاحظة</h3>
+                    النتيجة تقديرية ومخصصة للدعم والتحليل التعليمي، ولا تُعد قراراً مالياً نهائياً.
+                </section>
+            </aside>
+        </div>
+    </main>
+    <script>
+        (() => {
+            const form = document.querySelector('form');
+            const stepPanels = [...document.querySelectorAll('.step-panel')];
+            const indicators = [...document.querySelectorAll('[data-step-indicator]')];
+            const reviewPanel = document.querySelector('.review-panel');
+            const reviewList = document.getElementById('review-list');
+            const errorBox = document.getElementById('form-error');
+            const backButton = document.getElementById('back-button');
+            const nextButton = document.getElementById('next-button');
+            const submitButton = document.getElementById('submit-button');
+            let currentStep = 1;
+
+            function fieldsForStep(step) {
+                return stepPanels
+                    .filter((panel) => Number(panel.dataset.step) === step)
+                    .flatMap((panel) => [...panel.querySelectorAll('input, select')]);
+            }
+
+            function validateStep(step) {
+                let valid = true;
+                fieldsForStep(step).forEach((field) => {
+                    const wrapper = field.closest('.field');
+                    const fieldValid = field.checkValidity();
+                    wrapper.classList.toggle('invalid', !fieldValid);
+                    if (!fieldValid) valid = false;
+                });
+                errorBox.classList.toggle('active', !valid);
+                return valid;
+            }
+
+            function updateStep(nextStep) {
+                currentStep = nextStep;
+                stepPanels.forEach((panel) => panel.classList.toggle('active', Number(panel.dataset.step) === currentStep));
+                reviewPanel.classList.toggle('active', currentStep === 4);
+                indicators.forEach((indicator) => {
+                    const step = Number(indicator.dataset.stepIndicator);
+                    indicator.classList.toggle('active', step === currentStep);
+                    indicator.classList.toggle('complete', step < currentStep);
+                });
+                backButton.hidden = currentStep === 1;
+                nextButton.hidden = currentStep === 4;
+                submitButton.hidden = currentStep !== 4;
+                errorBox.classList.remove('active');
+                if (currentStep === 4) buildReview();
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function buildReview() {
+                reviewList.replaceChildren();
+                [...form.querySelectorAll('.field')].forEach((field) => {
+                    const control = field.querySelector('input, select');
+                    const label = field.querySelector('label');
+                    if (!control || !label) return;
+                    const item = document.createElement('div');
+                    item.className = 'review-item';
+                    const title = document.createElement('dt');
+                    title.textContent = label.textContent.replace('*', '').trim();
+                    const value = document.createElement('dd');
+                    value.textContent = control.tagName === 'SELECT'
+                        ? control.options[control.selectedIndex].text
+                        : control.value;
+                    item.append(title, value);
+                    reviewList.appendChild(item);
+                });
+            }
+
+            nextButton.addEventListener('click', () => {
+                if (validateStep(currentStep)) updateStep(currentStep + 1);
+            });
+
+            backButton.addEventListener('click', () => updateStep(currentStep - 1));
+
+            form.querySelectorAll('input, select').forEach((field) => {
+                field.addEventListener('input', () => field.closest('.field').classList.remove('invalid'));
+                field.addEventListener('change', () => field.closest('.field').classList.remove('invalid'));
+            });
+
+            form.addEventListener('submit', (event) => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    const firstInvalid = form.querySelector(':invalid');
+                    if (firstInvalid) firstInvalid.focus();
+                    return;
+                }
+                submitButton.classList.add('is-loading');
+                submitButton.textContent = 'جارٍ تجهيز التنبؤ...';
+                submitButton.setAttribute('aria-disabled', 'true');
+            });
+        })();
+    </script>
+</body>
+</html>
