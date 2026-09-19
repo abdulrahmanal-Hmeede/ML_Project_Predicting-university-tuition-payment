@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 # 1. تهيئة تطبيق FastAPI ومحرك القوالب
@@ -11,6 +12,7 @@ app = FastAPI(
     title="Tuition Payment Prediction System",
     description="نظام ذكي للتنبؤ بسداد القسط الجامعي وتقدير أيام التأخير",
 )
+app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # 2. مسارات ملفات النماذج المحفوظة عبر pickle

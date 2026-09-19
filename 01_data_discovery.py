@@ -1,14 +1,10 @@
-# %% [1] استيراد المكتبات وضبط بيئة العرض
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
-# ضبط النمط البياني الافتراضي (خلفية بيضاء مع خطوط شبكية واضحة)
 sns.set_theme(style="whitegrid")
 
-# %% [2] تحميل البيانات الأولية ومعاينة الأبعاد
-# قراءة ملف الإكسل عبر محرك openpyxl المدمج
 df = pd.read_excel("data/مجموعة البيانات.xlsx")
 
 print("--- أبعاد مجموعة البيانات ---")
@@ -16,10 +12,9 @@ print(f"إجمالي عدد الطلاب (الصفوف): {df.shape[0]}")
 print(f"إجمالي عدد المتغيرات (الأعمدة): {df.shape[1]}")
 print("-" * 50)
 
-# عرض أول صفين لمعاينة بنية البيانات
 df.head(2)
 
-# %% [3] فحص أسماء الأعمدة وأنواع البيانات البرمجية
+# [3] فحص أسماء الأعمدة وأنواع البيانات البرمجية
 print("--- قائمة الأعمدة لكشف الفراغات الخفية ---")
 for index, col in enumerate(df.columns, start=1):
   # دالة repr تكشف أي مسافات زائدة في أسماء الأعمدة
@@ -28,7 +23,7 @@ for index, col in enumerate(df.columns, start=1):
 print("\n--- فحص أنواع البيانات (Dtypes) والقيم غير الفارغة ---")
 df.info()
 
-# %% [4] تقرير القيم المفقودة (Missing Values Report)
+# [4] تقرير القيم المفقودة (Missing Values Report)
 # حساب عدد ونسبة الفراغات في كل عمود
 missing_counts = df.isnull().sum()
 missing_ratios = (df.isnull().mean() * 100).round(2)
@@ -46,19 +41,19 @@ print("--- تفاصيل الأعمدة التي تحتوي على قيم مفق�
 print(missing_summary)
 print(f"\nإجمالي عدد الخلايا الفارغة في الجدول: {df.isna().sum().sum()}")
 
-# %% [5] فحص التكرارات التامة في السجلات
+# [5] فحص التكرارات التامة في السجلات
 # التحقق مما إذا قام طالب بإرسال النموذج مرتين بالخطأ
 duplicate_count = df.duplicated().sum()
 print(f"عدد السجلات المكررة بالكامل: {duplicate_count}")
 
-# %% [6] الإحصاء الوصفي للأعمدة الرقمية وكشف الشواذ (Outliers)
+# [6] الإحصاء الوصفي للأعمدة الرقمية وكشف الشواذ (Outliers)
 num_cols = df.select_dtypes(include=[np.number]).columns
 
 print("--- الإحصاءات الوصفية للمتغيرات العددية ---")
 # استخراج المقاييس الأساسية لرصد القيم الشاذة والمستحيلة
 df[num_cols].describe().T[["count", "mean", "std", "min", "25%", "50%", "75%", "max"]]
 
-# %% [7] فحص المتغيرات الفئوية (Categorical) وتشتت الصياغات
+# [7] فحص المتغيرات الفئوية (Categorical) وتشتت الصياغات
 cat_cols = df.select_dtypes(include=["object"]).columns
 
 print("--- تكرارات القيم في المتغيرات الفئوية (كشف الأخطاء الإملائية) ---")
@@ -66,7 +61,7 @@ for col in cat_cols:
   print(f"\n--- المتغير: {col} ---")
   print(df[col].value_counts(dropna=False).head(6))
 
-# %% [8] فحص توازن فئات المتغير المستهدف (Target Class)
+# [8] فحص توازن فئات المتغير المستهدف (Target Class)
 # عمود التصنيف: هل تم سداد القسط الأخير بموعده
 target_col = "  هل سددت القسط الأخير في موعده  "
 
@@ -81,7 +76,7 @@ target_report = pd.DataFrame(
 print("--- توازن فئات متغير الهدف ---")
 print(target_report)
 
-# %% [9] الرسوم البيانية الاستكشافية للمشاكل المكتشفة
+# [9] الرسوم البيانية الاستكشافية للمشاكل المكتشفة
 fig, axes = plt.subplots(2, 2, figsize=(14, 9))
 
 # 1. مخطط توزيع متغير الهدف
